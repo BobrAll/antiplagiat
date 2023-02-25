@@ -1,39 +1,26 @@
 package org.example;
 
-import org.example.filereaders.DocxTextReader;
-import org.example.filereaders.PdfTextReader;
-import org.example.filereaders.TextReader;
+import static org.example.readers.FileReader.*;
 
 public class Main {
     public static void main(String[] args) {
-        String text = readFile(args);
-
-        System.out.println(text);
+        if (args.length != 0)
+            processArgs(args);
+        else
+            System.out.println("Инструкция по запуску:\n" +
+                    "-f \"абсолютный_путь_к_файлу\" - позволяет считать, обработать и отобразить файл\n" +
+                    "-d \"абсолютный_путь_к_директории\" - позволяет просканировать заданную директорию" +
+                    " и найти все файлы с расширением .pdf и .docx, затем передать их в обработку");
     }
 
-    public static String readFile(String[] fileNames) {
-        String filename = fileNames.length > 0? fileNames[0] :
-                "C:/Users/user/IdeaProjects/antiplagiat/src/main/resources/textfiles/отчет2.docx";
-        String fileExtension = filename.substring(filename.indexOf("."));
-
-        TextReader reader = null;
-        String text = null;
-
-        switch (fileExtension){
-            case ".pdf": reader = new PdfTextReader(); break;
-            case ".docx": reader = new DocxTextReader(); break;
-            default:
-                System.err.println("Неподдерживаемый формат файла.");
-                break;
+    public static void processArgs(String[] args) {
+        if (args.length != 2)
+            System.out.println("Неверное количество аргументов");
+        else switch (args[0]) {
+            case "-f": System.out.println(readFile(args[1])); break;
+            case "-d": readFiles(args[1]); break;
+            default: System.err.println("Введен неверный ключ: " + args[1]); break;
         }
-
-        try {
-            text = reader.read(filename);
-        } catch (Exception e) {
-            System.err.println("ошибка чтения файла");
-        }
-
-        return text;
     }
 }
 

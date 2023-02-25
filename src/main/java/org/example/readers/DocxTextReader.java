@@ -1,4 +1,4 @@
-package org.example.filereaders;
+package org.example.readers;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,16 +12,13 @@ public class DocxTextReader implements TextReader {
 
     @Override
     public String read(String filename) throws IOException {
-        String text = "";
         File file = new File(filename);
         FileInputStream fis = new FileInputStream(file.getAbsolutePath());
-
         XWPFDocument document = new XWPFDocument(fis);
 
-        List<XWPFParagraph> paragraphs = document.getParagraphs();
-
-        for (XWPFParagraph para : paragraphs)
-            text += para.getText() + "\n";
+        String text = "";
+        for (XWPFParagraph paragraph : document.getParagraphs())
+            text += paragraph.getText() + "\n";
 
         fis.close();
         return text;
