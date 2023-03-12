@@ -1,11 +1,13 @@
 package org.example.readers;
 
+import org.example.Text;
+
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
+import java.util.ArrayList;
 
 public class FileReader {
-    public static String readFile(String filename) {
+    private static String readFile(String filename) {
         String fileExtension = filename.substring(filename.lastIndexOf("."));
         TextReader reader = null;
 
@@ -23,24 +25,25 @@ public class FileReader {
         }
     }
 
-    public static void readFiles(String path) {
-        File dir = new File(path);
+    public static ArrayList<Text> readFiles(String dirPath) {
+        File dir = new File(dirPath);
+        ArrayList<Text> processedFiles = new ArrayList<>();
 
         //Поиск всех файлов с расширением .docx и .pdf
-        File[] arrFiles = dir.listFiles(new FilenameFilter() {
+        File[] files = dir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
                 return name.matches(".*[(pdf)(docx)]$");
             }
         });
 
-        System.out.println("Найдено файлов: " + arrFiles.length + "\nНачать обработку? (y/n)");
-        try {
-            if (System.in.read() == 'y')
-                for (File file : arrFiles)
-                    System.out.println(readFile(file.getAbsolutePath()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        for (File file : files) {
+            String filePath = file.getAbsolutePath();
+            Text text = new Text(filePath, readFile(filePath));
+
+            processedFiles.add(text);
         }
+
+        return processedFiles;
     }
 }
