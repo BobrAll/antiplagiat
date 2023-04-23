@@ -74,18 +74,18 @@ public class Text {
         final String TEMPLATES[] = {
                 "Университет ИТМО, факультет программной инженерии и компьютерной техники",
                 "Двухнедельная отчётная работа по «Информатике»: аннотация к статье",
-                "Дата лекции:",
-                "Дата сдачи:",
+                "Дата лекции",
+                "Дата сдачи",
                 "Выполнил(а)",
                 "№ группы",
                 "оценка",
                 "Фамилия И.О. студента не заполнять",
-                "Название статьи/главы книги/видеолекции:",
+                "Название статьи/главы книги/видеолекции",
                 "ФИО автора статьи (или e-mail)",
                 "Дата публикации",
                 "Размер статьи",
                 "(от 400 слов)",
-                "Теги, ключевые слова или словосочетания:",
+                "Теги, ключевые слова или словосочетания",
                 "Перечень фактов, упомянутых в статье",
                 "Позитивные следствия и/или достоинства описанной в статье технологии (минимум три пункта)",
                 "Негативные следствия и/или недостатки описанной в статье технологии (минимум три пункта)",
@@ -93,13 +93,13 @@ public class Text {
                 "Наличие этой графы не влияет на оценку"
         };
 
-        Pattern pattern = Pattern.compile("Теги, ключевые слова или словосочетания:.*Ваши замечания, пожелания преподавателю или анекдот о программистах", Pattern.DOTALL);
+        Pattern pattern = Pattern.compile("Теги, ключевые слова или словосочетания.*Ваши замечания, пожелания преподавателю или анекдот о программистах", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(text);
 
         if (matcher.find())
             text = text.substring(matcher.start(), matcher.end());
         else
-            System.out.println("Несоответствие шаблона");
+            System.err.println("Несоответствие шаблона");
 
         for (String template : TEMPLATES)
             text = text.replace(template, "");
@@ -109,7 +109,7 @@ public class Text {
     private ArrayList<Integer> createShingles(String text) {
         ArrayList<Integer> shingles = new ArrayList<>();
         String[] words = clearText(text).split(" ");
-        //printArr(words);
+
         for (int i = 0; i <= words.length - SHINGLE_LEN; i++) {
             String shingle = "";
 
@@ -122,10 +122,8 @@ public class Text {
         return shingles;
     }
 
-    private void printArr(String[] words) {
-        for (String word : words)
-            System.out.print(word + " ");
-
-        System.out.println();
+    @Override
+    public String toString() {
+        return "Файл: " + filename + ":\n" + text + "\n";
     }
 }
