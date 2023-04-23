@@ -3,7 +3,6 @@ package org.example.readers;
 import org.example.Text;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 public class FileReader {
@@ -27,23 +26,20 @@ public class FileReader {
 
     public static ArrayList<Text> readFiles(String dirPath) {
         File dir = new File(dirPath);
-        ArrayList<Text> processedFiles = new ArrayList<>();
+        ArrayList<Text> loadedFiles = new ArrayList<>();
 
-        //Поиск всех файлов с расширением .docx и .pdf
-        File[] files = dir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.matches(".*[(pdf)(docx)]$");
-            }
-        });
+        /**
+         * Поиск всех файлов с расширением .docx и .pdf
+         */
+        File[] files = dir.listFiles((dir1, name) -> name.matches(".*[(pdf)(docx)]$"));
 
         for (File file : files) {
             String filePath = file.getAbsolutePath();
             Text text = new Text(filePath, readFile(filePath));
 
-            processedFiles.add(text);
+            loadedFiles.add(text);
         }
 
-        return processedFiles;
+        return loadedFiles;
     }
 }

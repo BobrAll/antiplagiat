@@ -3,10 +3,12 @@ package org.example;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Data
 public class Text {
-    private final int SHINGLE_LEN = 3;
+    private final int SHINGLE_LEN = 2;
     private String filename;
     private String text;
     private ArrayList<Integer> shingles;
@@ -42,8 +44,9 @@ public class Text {
                 "только", "который", "которые", "которыми", "типо", "весь", "весьма", "где", "там", "есть",
                 "является", "может", "вот", "ну", "кратко", "ведь", "вообще", "общем", "итак", "например",
                 "просто", "никак"
-                //"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
         };
+
+        text = extractTextFromTemplate(text);
 
         text = text.toLowerCase();
 
@@ -67,11 +70,47 @@ public class Text {
         return text;
     }
 
+    public String extractTextFromTemplate(String text) {
+        final String TEMPLATES[] = {
+                "Университет ИТМО, факультет программной инженерии и компьютерной техники",
+                "Двухнедельная отчётная работа по «Информатике»: аннотация к статье",
+                "Дата лекции:",
+                "Дата сдачи:",
+                "Выполнил(а)",
+                "№ группы",
+                "оценка",
+                "Фамилия И.О. студента не заполнять",
+                "Название статьи/главы книги/видеолекции:",
+                "ФИО автора статьи (или e-mail)",
+                "Дата публикации",
+                "Размер статьи",
+                "(от 400 слов)",
+                "Теги, ключевые слова или словосочетания:",
+                "Перечень фактов, упомянутых в статье",
+                "Позитивные следствия и/или достоинства описанной в статье технологии (минимум три пункта)",
+                "Негативные следствия и/или недостатки описанной в статье технологии (минимум три пункта)",
+                "Ваши замечания, пожелания преподавателю или анекдот о программистах",
+                "Наличие этой графы не влияет на оценку"
+        };
+
+        Pattern pattern = Pattern.compile("Теги, ключевые слова или словосочетания:.*Ваши замечания, пожелания преподавателю или анекдот о программистах", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(text);
+
+        if (matcher.find())
+            text = text.substring(matcher.start(), matcher.end());
+        else
+            System.out.println("Несоответствие шаблона");
+
+        for (String template : TEMPLATES)
+            text = text.replace(template, "");
+
+        return text;
+    }
     private ArrayList<Integer> createShingles(String text) {
         ArrayList<Integer> shingles = new ArrayList<>();
         String[] words = clearText(text).split(" ");
-
-        for (int i = 0; i < words.length - SHINGLE_LEN; i++) {
+        //printArr(words);
+        for (int i = 0; i <= words.length - SHINGLE_LEN; i++) {
             String shingle = "";
 
             for (int j = 0; j < SHINGLE_LEN; j++)
@@ -81,5 +120,12 @@ public class Text {
         }
 
         return shingles;
+    }
+
+    private void printArr(String[] words) {
+        for (String word : words)
+            System.out.print(word + " ");
+
+        System.out.println();
     }
 }
