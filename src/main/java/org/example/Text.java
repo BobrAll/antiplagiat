@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 @Data
 public class Text {
-    private final int SHINGLE_LEN = 2;
+    private final int SHINGLE_LEN = 3;
     private String filename;
     private String text;
     private ArrayList<Integer> shingles;

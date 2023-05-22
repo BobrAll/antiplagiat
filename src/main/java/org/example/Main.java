@@ -27,6 +27,7 @@ public class Main {
         System.out.println();
     }
     public static void compareShingles(ArrayList<Integer> shingles1, ArrayList<Integer> shingles2) {
+        double plagiat;
         int counter = 0;
         for (int shingle1 : shingles1) {
             for (int shingle2 : shingles2) {
@@ -35,8 +36,11 @@ public class Main {
             }
         }
 
+        plagiat = (double)counter / Math.min(shingles1.size(), shingles2.size()) * 100;
+        if (plagiat > 100) plagiat = 100;
+
         System.out.println("найдено совпадений: " + counter);
-        System.out.printf("плагиат: %.1f%%\n", (double)counter / Math.min(shingles1.size(), shingles2.size()) * 100);
+        System.out.printf("плагиат: %.1f%%\n", plagiat);
     }
 }
 
